@@ -245,11 +245,11 @@ namespace Hangfire.MySql
                 $@"
 delete lst
 from `{_storageOptions.TablesPrefix}List` lst
-	inner join (SELECT tmp.Id, @rownum := @rownum + 1 AS ‘rank’
+	inner join (SELECT tmp.Id, @rownum := @rownum + 1 AS temprank
 		  		FROM `{_storageOptions.TablesPrefix}List` tmp, 
        				(SELECT @rownum := 0) r ) ranked on ranked.Id = lst.Id
 where lst.Key = @key
-    and ranked.rank not between @start and @end",
+    and ranked.temprank not between @start and @end",
                 new { key = key, start = keepStartingFrom + 1, end = keepEndingAt + 1 }));
         }
 
